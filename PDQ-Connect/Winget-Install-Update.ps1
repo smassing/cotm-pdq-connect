@@ -45,8 +45,9 @@ Write-Host "Start Run Update/Installer"
 $InstalledList = & $Winget list -q $WingetAppID --accept-source-agreements -s winget
 
 Write-Host "Query Results:"
+#clean up the garbage in the result scaused by the progress bars
 $filteredList = $InstalledList | Where-Object {$_.TrimStart()[0] -match "^[a-zA-Z0-9\-\s]+$"}
-
+#output results to PDQ log
 $filteredList
 
 #Flatten list
@@ -63,8 +64,9 @@ if ($InstalledList.Contains("No installed package found")) {
     }
 
 Write-Host "Result:"
-# Γûê
+#clean up the garbage in the result scaused by the progress bars
 $filteredResult = $commandResult | Where-Object {$_.TrimStart()[0] -match "^[a-zA-Z0-9\-\s]+$"}
+#output results to PDQ log
 $filteredResult
 
 Write-Host "Action Completed: $WinGetAppID"
