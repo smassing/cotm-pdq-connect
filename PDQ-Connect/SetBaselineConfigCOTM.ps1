@@ -49,7 +49,6 @@ function Set-RegistryValueDWORD {
 # Fix for Nessus 42873 – SSL Medium Strength Cipher Suites Supported (SWEET32)
 $key = "SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128"
 $valueName = "Enabled"
-$valueType = DWORD
 $valueData = 0
 Set-RegistryValueDWORD -regHive $hive -regPath $key -regValueName $valueName -regValueData $valueData
 
