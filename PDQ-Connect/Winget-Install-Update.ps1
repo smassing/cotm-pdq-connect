@@ -53,15 +53,25 @@ $filteredList
 #Flatten list
 $InstalledList = [system.String]::Join(" ", $InstalledList)
 
-if ($InstalledList.Contains("No installed package found")) {
-    #then do an install
-    write-Host "Action: Try install of $WinGetAppID"
-    $commandResult = & $winget install --id $WinGetAppID --silent --disable-interactivity --accept-source-agreements -s winget
-    } else {
-    #then do an upgrade
-    Write-Host "Action: Try upgrade of $WinGetAppID"
-    $commandResult = & $Winget upgrade --id $WinGetAppID --silent --disable-interactivity --accept-source-agreements -s winget
-    }
+try {
+    #create an empty array for results
+    $commandResult = @()
+    $commandResult += "No package to install or upgrade found."
+
+    if ($InstalledList.Contains("No installed package found")) {
+        #then do an install
+        write-Host "Action: Try install of $WinGetAppID"
+        $commandResult = & $winget install --id $WinGetAppID --silent --disable-interactivity --accept-source-agreements -s winget 
+        } 
+    if ($InstalledList.Contains("Available")) {
+        #then do an upgrade
+        Write-Host "Action: Try upgrade of $WinGetAppID"
+        $commandResult = & $Winget upgrade --id $WinGetAppID --silent --disable-interactivity --accept-source-agreements -s winget 
+        }
+} 
+catch {
+    $commandResult += $.Error
+}
 
 Write-Host "Result:"
 #clean up the garbage in the result scaused by the progress bars

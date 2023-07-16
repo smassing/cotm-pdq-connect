@@ -198,6 +198,19 @@ Write-Host "Disable Flash in Adobe Reader DC complete."
 New-Item 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers' -Force -ErrorAction Ignore | Out-Null
  
 # Disable insecure/weak ciphers.
+# $insecureCiphers = @(
+#   'DES 56/56',
+#   'NULL',
+#   'RC2 128/128',
+#   'RC2 40/128',
+#   'RC2 56/128',
+#   'RC4 40/128',
+#   'RC4 56/128',
+#   'RC4 64/128',
+#   'RC4 128/128',
+#   'Triple DES 168',
+#   'Triple DES 168/168'
+# )
 $insecureCiphers = @(
   'RC4 40/128',
   'RC4 56/128',
