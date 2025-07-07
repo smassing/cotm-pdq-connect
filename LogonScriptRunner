@@ -1,0 +1,7 @@
+$logonScripts = Get-ChildItem -Path "C:\COTM\Logon\*.ps1" -File
+
+foreach ($script in $logonScripts) {
+
+    Start-Process -FilePath "powershell.exe" -ArgumentList "-File " + $script -Wait -NoNewWindow
+
+}
