@@ -5,7 +5,7 @@ $sortedScripts = $logonScripts | Sort-Object
 ForEach ($script in $sortedScripts) {
     
     Try {
-        $result = Start-Process -FilePath "powershell.exe" -ArgumentList "-File " + $script -Wait -NoNewWindow -ErrorAction Stop
+        $result = Start-Process -FilePath "powershell.exe" -ArgumentList "-File " + $script -Wait -NoNewWindow -ErrorAction Continue
         Write-Host $result
     } 
     Catch {
