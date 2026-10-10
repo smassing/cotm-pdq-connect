@@ -6,7 +6,7 @@ $hive = "HKLM"
 
 #  IMPORTANT!!!!!!  Make sure to increment this value or all you hard work is for naught
 #  This will only run if ThisBaselineVersion is higher than the previous one.
-$ThisBaselineVersion = 2
+$ThisBaselineVersion = 4
 
 
 #function declarations ---------------------------------------------------------------------
@@ -193,24 +193,19 @@ Set-RegistryValueDWORD -regHive $hive -regPath $key -regValueName $valueName -re
 Write-Host "Disable Flash in Adobe Reader DC complete."
 
 # -----------------------------------------------------------------------------
+# Local Security Authority (LSA) protection
+$key = "SYSTEM\CurrentControlSet\Control\Lsa"
+$valueName = "RunAsPPL"
+$valueData = 1
+Set-RegistryValueDWORD -regHive $hive -regPath $key -regValueName $valueName -regValueData $valueData
+Write-Host "Local Security Authority (LSA) protection complete."
+
+# -----------------------------------------------------------------------------
 # Fix for Nessus 42873 – SSL Medium Strength Cipher Suites Supported (SWEET32)
 # Re-create the ciphers key.
 New-Item 'HKLM:SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers' -Force -ErrorAction Ignore | Out-Null
  
 # Disable insecure/weak ciphers.
-# $insecureCiphers = @(
-#   'DES 56/56',
-#   'NULL',
-#   'RC2 128/128',
-#   'RC2 40/128',
-#   'RC2 56/128',
-#   'RC4 40/128',
-#   'RC4 56/128',
-#   'RC4 64/128',
-#   'RC4 128/128',
-#   'Triple DES 168',
-#   'Triple DES 168/168'
-# )
 $insecureCiphers = @(
   'RC4 40/128',
   'RC4 56/128',
@@ -246,6 +241,14 @@ Foreach ($insecureCipher in $insecureCiphers) {
 #   Write-Host "Strong cipher $secureCipher has been enabled."
 # }
 
+# -----------------------------------------------------------------------------
+# Disable Javascript Adobe Reader DC
+$key = "SOFTWARE\Policies\Adobe\Acrobat Reader\DC\FeatureLockDown"
+$valueName = "bDisableJavaScript"
+$valueData = 1
+Set-RegistryValueDWORD -regHive $hive -regPath $key -regValueName $valueName -regValueData $valueData
+Write-Host "Disable Javascript in Adobe Reader DC complete."
+
 
 # -----------------------------------------------------------------------------
 # SAVE FOR LAST
@@ -256,5 +259,5 @@ $valueName = "Version"
 $valueData = $ThisBaselineVersion
 Set-RegistryValueDWORD -regHive $hive -regPath $key -regValueName $valueName -regValueData $valueData
 Write-Host "Registry update completed."
-Write-Host "Registry baseline updated to " + $ThisBaselineVersion
+Write-Host "Registry baseline updated to " $ThisBaselineVersion
 
